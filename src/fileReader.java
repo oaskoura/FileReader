@@ -10,7 +10,18 @@ import java.util.Set;
 
 /**
  * This class represents a reader that redirects STD I/O to current directory
- * and reads/writes files in current directory.
+ * and reads/writes files in current directory.<br>
+ * It allows you to read files by name and extension. Supports .txt, .htm, etc
+ * but not .pdf<br>
+ * It allows you to to use Strings in the files and perform different operations on them.<br>
+ * It allows you to print treated data into .txt files<br><br>
+ * Recommended use: to scan HTML files for key-element: img src for example.
+ * 
+ * @version 1.1
+ * @author Osama Askoura<br>
+ * <a href="http://www.twitter.com/oaskoura">Follow on Twitter</a><br>
+ * <a href="http://www.github.com/oaskoura">Project on Github</a><br>
+ * <a href="http://www.cairobox.com/">Cairobox Portfolio</a><br>
  */
 public class fileReader
 {
@@ -18,7 +29,7 @@ public class fileReader
 	private final Set<String> set = new LinkedHashSet<String>();
 	private final LinkedList<String> tokens = new LinkedList<String>();
 	private final String filename;
-	private final Map<String,PrintStream> stream = new HashMap<String,PrintStream>();
+	private final Map<String, PrintStream> stream = new HashMap<String, PrintStream>();
 
 	/**
 	 * Constructs a reader that looks in current directory for the given
@@ -139,7 +150,7 @@ public class fileReader
 			System.err.println("Error openinng: " + name);
 			throw new IllegalArgumentException(e.getMessage());
 		}
-		
+
 		return this.stream.size();
 	}
 
@@ -153,17 +164,17 @@ public class fileReader
 	 */
 	public void print(final String stream, final String s)
 	{
-		
+
 		final PrintStream p = this.stream.get(stream);
-		
+
 		// Warn the program if that stream doesn't exist
-		if(p == null)
+		if (p == null)
 		{
 			throw new IllegalArgumentException("PrintStream not found");
 		}
-		
+
 		p.println(s);
-		
+
 	}
 
 }
