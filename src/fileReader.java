@@ -1,10 +1,10 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -18,7 +18,7 @@ public class fileReader
 	private final Set<String> set = new LinkedHashSet<String>();
 	private final LinkedList<String> tokens = new LinkedList<String>();
 	private final String filename;
-	private final List<PrintStream> stream = new ArrayList<PrintStream>();
+	private final Map<String,PrintStream> stream = new HashMap<String,PrintStream>();
 
 	/**
 	 * Constructs a reader that looks in current directory for the given
@@ -33,7 +33,7 @@ public class fileReader
 	 * @exception IllegalArgumentException
 	 *                throws IllegalArgumentException if cannot read filename
 	 */
-	public fileReader(final String s, final String extension)
+	public fileReader(final String s, final String extension) throws IllegalArgumentException
 	{
 
 		this.filename = "" + System.getProperty("user.dir") + "\\" + s + "."
@@ -70,9 +70,9 @@ public class fileReader
 	 */
 	public void close()
 	{
-		for (final PrintStream p : this.stream)
+		for (String key : this.stream.keySet())
 		{
-			p.close();
+			this.stream.get(key).close();
 		}
 	}
 
@@ -134,8 +134,7 @@ public class fileReader
 	{
 		try
 		{
-			final PrintStream p = new PrintStream(name + ".txt");
-			this.stream.add(p);
+			this.stream.put(name, new PrintStream(name + ".txt"));
 		}
 		catch (final Exception e)
 		{
@@ -143,23 +142,31 @@ public class fileReader
 			System.err.println("Error openinng: " + name);
 			throw new IllegalArgumentException(e.getMessage());
 		}
+		
 		return this.stream.size();
 	}
 
 	/**
 	 * Write a given string to output file.
 	 * 
-	 * @param streamNumber
-	 *            the numbered output file to write to
+	 * @param stream
+	 *            the output stream to write to
 	 * @param s
 	 *            the string to write
 	 */
-	public void print(final int streamNumber, final String s)
+	public void print(final String stream, final String s)
 	{
-		final PrintStream p = this.stream.get(streamNumber - 1);
+		
+		final PrintStream p = this.stream.get(stream);
+		
+		// Warn the program if that stream doesn't exist
+		if(p == null)
+		{
+			throw new IllegalArgumentException("PrintStream not found");
+		}
+		
 		p.println(s);
-		System.out.println("Successfully printed: \"" + s + "\" to File No. : "
-				+ streamNumber);
+		
 		p.close();
 
 	}
