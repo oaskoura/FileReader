@@ -1,7 +1,8 @@
 FILEREADER v1.0
 
-a Java SE6 tool that allows you to read/write files in current directory. Support multiple extensions: .txt & .html but NOT .pdf
-Recommended when fishing <img src> in HTML files or manipulating data to create Nodes & Edges for JSON data export or NETDRAW
+a Java SE6 tool that ease it to read/write files by redirecting STD I/O to current directory. 
+Support multiple extensions: txt & html but NOT pdf
+Recommended: when fishing <img src> in HTML files or manipulating data to create Nodes & Edges for JSON data export or NETDRAW
 
 QuickStart:
 - Install Java Runtime 7.0
