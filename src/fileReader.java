@@ -27,17 +27,14 @@ public class fileReader
 	 * 
 	 * @param s
 	 *            The name of file to read
-	 * @param extension
-	 *            The extension of the file
 	 * @pre. file is in current directory
 	 * @exception IllegalArgumentException
 	 *                throws IllegalArgumentException if cannot read filename
 	 */
-	public fileReader(final String s, final String extension) throws IllegalArgumentException
+	public fileReader(final String s) throws IllegalArgumentException
 	{
 
-		this.filename = "" + System.getProperty("user.dir") + "\\" + s + "."
-				+ extension;
+		this.filename = s;
 		final File fieldFile = new File(this.filename);
 		Scanner input = null;
 		try
@@ -134,7 +131,7 @@ public class fileReader
 	{
 		try
 		{
-			this.stream.put(name, new PrintStream(name + ".txt"));
+			this.stream.put(name, new PrintStream(name));
 		}
 		catch (final Exception e)
 		{
