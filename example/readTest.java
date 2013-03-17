@@ -5,7 +5,7 @@ public class readTest {
 
 	public static void main(String[] args)
 	{	
-		fileReader reader = new fileReader("colorful", "htm"); // looks for and reads index.htm
+		fileReader reader = new fileReader("readme", "txt"); // looks for and reads index.htm
 		List<String> lines = reader.getList(); // gets you lines of the read file
 		List<String> tokens = reader.getTokens(","); // gets you list of word delimited by ","
 		
