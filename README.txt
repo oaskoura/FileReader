@@ -1,5 +1,6 @@
 FILEREADER v1.0
-allows you to read/write files in current directory. Support multiple extensions: .txt & .html but NOT .pdf
+
+a Java SE6 tool that allows you to read/write files in current directory. Support multiple extensions: .txt & .html but NOT .pdf
 
 
 QuickStart:
