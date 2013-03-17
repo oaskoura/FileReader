@@ -167,8 +167,6 @@ public class fileReader
 		
 		p.println(s);
 		
-		p.close();
-
 	}
 
 }
