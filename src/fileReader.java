@@ -14,7 +14,6 @@ import java.util.Set;
  */
 public class fileReader
 {
-
 	private final LinkedList<String> list = new LinkedList<String>();
 	private final Set<String> set = new LinkedHashSet<String>();
 	private final LinkedList<String> tokens = new LinkedList<String>();
@@ -24,13 +23,15 @@ public class fileReader
 	/**
 	 * Constructs a reader that looks in current directory for the given
 	 * filename. It also populates the list and set with file lines. Note: It
-	 * skips empty lines. trims and lowerCase() all unempty lines.
+	 * skips empty lines. trims and lowerCase() all nonempty lines.
 	 * 
-	 * @param filename
-	 *            The name of file in current directory to read
+	 * @param s
+	 *            The name of file to read
+	 * @param extension
+	 *            The extension of the file
 	 * @pre. file is in current directory
-	 * @exception IOException
-	 *                throws Exception if cannot read filename
+	 * @exception IllegalArgumentException
+	 *                throws IllegalArgumentException if cannot read filename
 	 */
 	public fileReader(final String s, final String extension)
 	{
@@ -45,8 +46,9 @@ public class fileReader
 		}
 		catch (final IOException e)
 		{
-			System.out.println("Error openinng: " + this.filename);
-			System.exit(1);
+			// Print to stderr and warn the mother program, rather than quitting
+			System.err.println("Error openinng: " + this.filename);
+			throw new IllegalArgumentException(e.getMessage());
 		}
 
 		while (input.hasNextLine())
@@ -58,8 +60,14 @@ public class fileReader
 				this.set.add(line);
 			}
 		}
+
+		// Stop resource leak
+		input.close();
 	}
 
+	/**
+	 * Close all the streams.
+	 */
 	public void close()
 	{
 		for (final PrintStream p : this.stream)
@@ -69,17 +77,17 @@ public class fileReader
 	}
 
 	/**
-	 * Returns linkedlist of read lines of type: String Note: the linkedlist
-	 * allow duplicates.
+	 * Returns the lines read so far. Note: LinkedList allows duplicates.
+	 * 
+	 * @return LinkedList of String type
 	 */
 	public LinkedList<String> getList()
 	{
-		final LinkedList<String> r = new LinkedList<String>(this.list);
-		return r;
+		return new LinkedList<String>(this.list);
 	}
 
 	/**
-	 * Returns a LinkedHashSet of non-duplicated lines in the read file
+	 * Returns a LinkedHashSet of non-duplicated lines in the read file.
 	 * 
 	 * @return LinkedHashSet of String type
 	 * 
@@ -87,12 +95,15 @@ public class fileReader
 
 	public Set<String> getSet()
 	{
-		final Set<String> r = new LinkedHashSet<String>(this.set);
-		return r;
+		return new LinkedHashSet<String>(this.set);
 	}
 
 	/**
-	 * Returns a LinkedList of String tokens delimited by the given
+	 * Parses through all the lines read and tokenize them by a given delimiter
+	 * 
+	 * @param delimiter
+	 *            The character(s) to delimit.
+	 * @return LinkedList of parsed strings
 	 */
 	public LinkedList<String> getTokens(final String delimiter)
 	{
@@ -101,10 +112,10 @@ public class fileReader
 		for (int i = 0; i < this.list.size(); i++)
 		{
 			final String line = this.list.get(i);
-			final String[] a = line.split(delims);
-			for (int j = 0; j < a.length; j++)
+			final String[] token = line.split(delims);
+			for (int j = 0; j < token.length; j++)
 			{
-				this.tokens.add(a[j]);
+				this.tokens.add(token[j]);
 			}
 
 		}
@@ -112,6 +123,13 @@ public class fileReader
 
 	}
 
+	/**
+	 * Create a new output stream based on input string.
+	 * 
+	 * @param name
+	 *            Name of the output stream to create
+	 * @return number of PrintStreams allocated so far
+	 */
 	public int initiateStream(final String name)
 	{
 		try
@@ -121,11 +139,21 @@ public class fileReader
 		}
 		catch (final Exception e)
 		{
-			System.out.println("File Not Found");
+			// Print to stderr and warn the mother program
+			System.err.println("Error openinng: " + name);
+			throw new IllegalArgumentException(e.getMessage());
 		}
 		return this.stream.size();
 	}
 
+	/**
+	 * Write a given string to output file.
+	 * 
+	 * @param streamNumber
+	 *            the numbered output file to write to
+	 * @param s
+	 *            the string to write
+	 */
 	public void print(final int streamNumber, final String s)
 	{
 		final PrintStream p = this.stream.get(streamNumber - 1);
